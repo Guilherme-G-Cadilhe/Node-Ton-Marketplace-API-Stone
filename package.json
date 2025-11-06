@@ -45,6 +45,7 @@
     "prettier": "^3.6.2",
     "serverless": "^3.40.0",
     "serverless-offline": "^13.9.0",
+    "serverless-openapi-documenter": "^0.0.116",
     "serverless-plugin-typescript": "^2.1.5",
     "ts-jest": "^29.4.5",
     "ts-node": "^10.9.2",

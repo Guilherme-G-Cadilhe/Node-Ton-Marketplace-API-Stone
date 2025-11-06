@@ -22,6 +22,7 @@ provider:
 plugins:
   - serverless-plugin-typescript # Compila TS
   - serverless-offline # Roda a API localmente
+  - serverless-openapi-documenter # Documenta a API
 
 package:
   individually: true # Otimiza o tamanho de cada Lambda
@@ -29,6 +30,67 @@ package:
 # Variáveis customizadas
 custom:
   tableName: ton-marketplace-api-${self:provider.stage} # ex: ton-marketplace-api-dev
+
+  documentation:
+    version: "1.0.0"
+    title: "Ton Marketplace API"
+    description: "API para o desafio SWE da Stone (Ton/Renda Extra)"
+    models:
+      - name: "ErrorResponse"
+        description: "Resposta de erro padrão"
+        schema:
+          type: "object"
+          properties:
+            message: { type: "string" }
+
+      - name: "LoginRequest"
+        description: "Payload para o endpoint de login"
+        schema:
+          type: "object"
+          properties:
+            email: { type: "string", example: "teste@ton.com" }
+            password: { type: "string", example: "senha123" }
+
+      - name: "LoginResponse"
+        description: "Resposta do login bem-sucedido"
+        schema:
+          type: "object"
+          properties:
+            token: { type: "string" }
+            expiresIn: { type: "integer" }
+
+      - name: "Product"
+        description: "Objeto de produto"
+        schema:
+          type: "object"
+          properties:
+            PK: { type: "string" }
+            SK: { type: "string" }
+            name: { type: "string" }
+            description: { type: "string" }
+            price: { type: "number" }
+            category: { type: "string" }
+
+      - name: "Pagination"
+        description: "Metadados de paginação"
+        schema:
+          type: "object"
+          properties:
+            limit: { type: "integer" }
+            hasNext: { type: "boolean" }
+            nextCursor: { type: "string", nullable: true }
+
+      - name: "ListProductsResponse"
+        description: "Resposta da listagem de produtos"
+        schema:
+          type: "object"
+          properties:
+            data:
+              type: "array"
+              items:
+                $ref: "#/components/schemas/Product"
+            pagination:
+              $ref: "#/components/schemas/Pagination"
 
 # Lambdas e endpoints
 functions:
@@ -45,6 +107,24 @@ functions:
       - httpApi:
           path: /auth/login
           method: POST
+          documentation:
+            summary: "Autentica um usuário"
+            description: "Realiza o login via email e senha e retorna um token JWT."
+            requestBody:
+              description: "Credenciais do usuário"
+            requestModels:
+              "application/json": "LoginRequest" # (Usa a chave do 'models' acima)
+            methodResponses:
+              - statusCode: 200
+                responseBody:
+                  description: "Login bem-sucedido"
+                responseModels:
+                  "application/json": "LoginResponse"
+              - statusCode: 401
+                responseBody:
+                  description: "Email ou senha inválidos"
+                responseModels:
+                  "application/json": "ErrorResponse"
 
   jwtAuthorizer:
     handler: src/authorizers/jwt.handler # Aponta para o arquivo 'jwt.ts', função 'handler'
@@ -57,6 +137,30 @@ functions:
           method: GET
           authorizer:
             name: jwtAuthorizer
+          documentation:
+            summary: "Lista produtos com paginação"
+            description: "Retorna uma lista paginada de produtos. Requer token JWT."
+            # (Este plugin entende o 'authorizer:' automaticamente)
+            queryParams:
+              - name: limit
+                description: "Número de itens por página"
+                schema:
+                  type: "integer"
+                  default: 20
+              - name: cursor
+                description: "Cursor (Base64) para a próxima página"
+                schema:
+                  type: "string"
+            methodResponses:
+              - statusCode: 200
+                responseBody:
+                  description: "Lista de produtos"
+                responseModels:
+                  "application/json": "ListProductsResponse"
+              - statusCode: 401
+                description: "Token JWT inválido ou ausente"
+              - statusCode: 429
+                description: "Too Many Requests (Rate Limit)"
 
 # Recursos de infra
 resources:
