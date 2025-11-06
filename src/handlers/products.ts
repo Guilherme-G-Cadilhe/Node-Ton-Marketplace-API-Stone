@@ -2,6 +2,7 @@ import { APIGatewayEventRequestContextV2, APIGatewayProxyHandlerV2 } from "aws-l
 import { ZodError } from "zod";
 import { listProductsSchema } from "../schemas/product-schemas";
 import { listProducts } from "../services/product-service";
+import { consumeToken, RateLimitError } from "../services/rate-limiter";
 
 interface AuthorizerLambdaPayload {
   userId: string;
@@ -9,8 +10,6 @@ interface AuthorizerLambdaPayload {
   role: string;
 }
 
-// 2. Defina um tipo para o requestContext que *inclui* o que o
-// API Gateway vai injetar. Usamos '&' para adicionar propriedades.
 type CustomRequestContext = APIGatewayEventRequestContextV2 & {
   authorizer: {
     lambda: AuthorizerLambdaPayload;
@@ -23,11 +22,13 @@ type CustomRequestContext = APIGatewayEventRequestContextV2 & {
 export const list: APIGatewayProxyHandlerV2 = async (event) => {
   try {
     const requestContext = event.requestContext as CustomRequestContext;
-    // O 'context' do autorizador é injetado aqui pelo API Gateway
     const authorizerContext = requestContext.authorizer.lambda;
-
+    if (!authorizerContext || !authorizerContext?.userId) {
+      throw new Error("Unauthorized");
+    }
     console.log(`Usuário ${authorizerContext?.email} (Role: ${authorizerContext?.role}) está acessando /products.`);
 
+    await consumeToken(authorizerContext.userId);
     const { limit, cursor } = listProductsSchema.parse(event.queryStringParameters ?? {});
 
     const result = await listProducts(limit, cursor);
@@ -38,6 +39,12 @@ export const list: APIGatewayProxyHandlerV2 = async (event) => {
       body: JSON.stringify(result),
     };
   } catch (error) {
+    if (error instanceof RateLimitError) {
+      return {
+        statusCode: 429, // Too Many Requests
+        body: JSON.stringify({ message: error.message }),
+      };
+    }
     if (error instanceof ZodError) {
       return {
         statusCode: 400, // Bad Request
