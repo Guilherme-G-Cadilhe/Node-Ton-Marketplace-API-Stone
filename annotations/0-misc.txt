@@ -83,3 +83,8 @@ Gerar senha na mão:
 > node -e "console.log(require('bcryptjs').hashSync('senha123', 10))"
 
 $2b$10$dlWbsFIAo1nSwHhDatba7eCv6..7I1bXucHoEx9ZRbl.rtPZfEbqS
+
+
+===== Open api =====
+Gerar:
+> npx serverless openapi generate -o openapi.json -f json
