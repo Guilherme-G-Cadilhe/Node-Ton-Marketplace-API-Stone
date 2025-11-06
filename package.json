@@ -4,9 +4,14 @@
   "description": "Desafio para vaga de SWE",
   "main": "index.js",
   "scripts": {
+    "dev": "serverless offline",
     "test": "jest",
     "commit": "cz",
-    "prepare": "husky"
+    "prepare": "husky",
+    "lint:check": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format:fix": "prettier --write \"src/**/*.ts\" \"tests/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.ts\" \"tests/**/*.ts\""
   },
   "repository": {
     "type": "git",
@@ -31,14 +36,20 @@
     "aws-sdk-client-mock": "^4.1.0",
     "commitizen": "^4.3.1",
     "cz-conventional-changelog": "^3.3.0",
+    "eslint": "^9.39.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "globals": "^16.5.0",
     "husky": "^9.1.7",
     "jest": "^30.2.0",
+    "prettier": "^3.6.2",
     "serverless": "^3.40.0",
     "serverless-offline": "^13.9.0",
     "serverless-plugin-typescript": "^2.1.5",
     "ts-jest": "^29.4.5",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.46.3"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.922.0",

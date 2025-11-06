@@ -8,7 +8,9 @@ const TABLE_NAME = process.env.TABLE_NAME!;
 /**
  * Busca um usuário pelo email (que compõe a PK)
  */
-export async function getUserByEmail(email: string): Promise<StoredUser | undefined> {
+export async function getUserByEmail(
+  email: string
+): Promise<StoredUser | undefined> {
   const pk = `USER#${email}`;
   const sk = "METADATA";
 

@@ -42,7 +42,10 @@ describe("AuthService (loginUser)", () => {
     expect(result.expiresIn).toBe(3600);
     // Verifica se as funções corretas foram chamadas com os parâmetros corretos
     expect(mockedUserRepo.getUserByEmail).toHaveBeenCalledWith("teste@ton.com");
-    expect(mockedBcrypt.compare).toHaveBeenCalledWith("senha123", mockStoredUser.passwordHash);
+    expect(mockedBcrypt.compare).toHaveBeenCalledWith(
+      "senha123",
+      mockStoredUser.passwordHash
+    );
     expect(mockedJwt.sign).toHaveBeenCalledWith(
       {
         userId: mockStoredUser.PK,
@@ -61,9 +64,13 @@ describe("AuthService (loginUser)", () => {
     (mockedBcrypt.compare as jest.Mock).mockResolvedValue(false);
 
     // Verificamos se a promessa é rejeitada com o erro específico
-    await expect(loginUser("teste@ton.com", "senha-errada")).rejects.toThrow(AuthError);
+    await expect(loginUser("teste@ton.com", "senha-errada")).rejects.toThrow(
+      AuthError
+    );
 
-    await expect(loginUser("teste@ton.com", "senha-errada")).rejects.toThrow("Email ou senha inválidos.");
+    await expect(loginUser("teste@ton.com", "senha-errada")).rejects.toThrow(
+      "Email ou senha inválidos."
+    );
 
     // Garante que o JWT *não* foi chamado
     expect(mockedJwt.sign).not.toHaveBeenCalled();
@@ -73,7 +80,9 @@ describe("AuthService (loginUser)", () => {
     // O repositório retorna undefined
     mockedUserRepo.getUserByEmail.mockResolvedValue(undefined);
 
-    await expect(loginUser("fantasma@ton.com", "qualquer-senha")).rejects.toThrow("Email ou senha inválidos.");
+    await expect(
+      loginUser("fantasma@ton.com", "qualquer-senha")
+    ).rejects.toThrow("Email ou senha inválidos.");
 
     // Garante que nem o bcrypt nem o JWT foram chamados
     expect(mockedBcrypt.compare).not.toHaveBeenCalled();
@@ -85,6 +94,8 @@ describe("AuthService (loginUser)", () => {
     mockedUserRepo.getUserByEmail.mockResolvedValue(mockStoredUser);
     mockedBcrypt.compare.mockResolvedValue(true as never);
 
-    await expect(loginUser("teste@ton.com", "senha123")).rejects.toThrow("JWT_SECRET não configurado no servidor.");
+    await expect(loginUser("teste@ton.com", "senha123")).rejects.toThrow(
+      "JWT_SECRET não configurado no servidor."
+    );
   });
 });

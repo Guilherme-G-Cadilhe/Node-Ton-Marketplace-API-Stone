@@ -1,19 +1,22 @@
 import { QueryCommand, QueryCommandOutput } from "@aws-sdk/lib-dynamodb";
 import { docClient } from "../config/dynamodb";
-import { StoredProduct } from "../models/product";
+import { DynamoCursor, StoredProduct } from "../models/product";
 
 const TABLE_NAME = process.env.TABLE_NAME!;
 
 // Interface para o resultado da nossa query
 export interface ProductQueryResult {
   items: StoredProduct[];
-  lastEvaluatedKey?: Record<string, any>;
+  lastEvaluatedKey?: DynamoCursor;
 }
 
 /**
  * Busca produtos no banco de dados com paginação.
  */
-export async function getProducts(limit: number, cursor?: Record<string, any>): Promise<ProductQueryResult> {
+export async function getProducts(
+  limit: number,
+  cursor?: DynamoCursor
+): Promise<ProductQueryResult> {
   // Usamos 'Query' (rápido) e não 'Scan' (lento)
   // Estamos buscando todos os itens onde a "gaveta" (PK) começa com "PRODUCT#"
   const command = new QueryCommand({
@@ -33,7 +36,7 @@ export async function getProducts(limit: number, cursor?: Record<string, any>): 
 
     return {
       items: (result.Items ?? []) as StoredProduct[],
-      lastEvaluatedKey: result.LastEvaluatedKey,
+      lastEvaluatedKey: result.LastEvaluatedKey as DynamoCursor | undefined,
     };
   } catch (error) {
     console.error("Erro ao buscar produtos no DynamoDB:", error);

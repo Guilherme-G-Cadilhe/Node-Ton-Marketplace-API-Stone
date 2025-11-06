@@ -4,7 +4,9 @@ import { StoredProduct } from "../../../src/models/product";
 
 jest.mock("../../../src/repositories/product-repository");
 
-const mockedProductRepo = ProductRepository as jest.Mocked<typeof ProductRepository>;
+const mockedProductRepo = ProductRepository as jest.Mocked<
+  typeof ProductRepository
+>;
 
 const mockProduct: StoredProduct = {
   PK: "PRODUCTS",
@@ -63,7 +65,10 @@ describe("ProductService (listProducts)", () => {
     expect(result.pagination.hasNext).toBe(false); // Não há próxima página
     expect(result.pagination.nextCursor).toBe(null); // Cursor é nulo
     // Verifica se o serviço *decodificou* o cursor de volta para o objeto
-    expect(mockedProductRepo.getProducts).toHaveBeenCalledWith(10, mockCursorObject);
+    expect(mockedProductRepo.getProducts).toHaveBeenCalledWith(
+      10,
+      mockCursorObject
+    );
   });
 
   // --- Teste 3: Estado Vazio ---

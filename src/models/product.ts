@@ -6,3 +6,8 @@ export interface StoredProduct {
   price: number; // Em centavos, Ex: 11880 = R$ 118.80
   category: string;
 }
+
+export type DynamoCursor = {
+  PK: string;
+  SK: string;
+};

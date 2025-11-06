@@ -1,11 +1,7 @@
-// Importa os tipos do API Gateway
 import { APIGatewayProxyHandlerV2 } from "aws-lambda";
 
 // O 'handler' é a função que a Lambda vai executar
-export const check: APIGatewayProxyHandlerV2 = async (event, context) => {
-  // Loga o evento (boa prática para debug)
-  console.log("Evento recebido:", event);
-
+export const check: APIGatewayProxyHandlerV2 = async () => {
   // Retorna uma resposta HTTP 200
   return {
     statusCode: 200,

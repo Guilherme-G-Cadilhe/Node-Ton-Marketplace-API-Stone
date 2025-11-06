@@ -1,4 +1,7 @@
-import { APIGatewayEventRequestContextV2, APIGatewayProxyHandlerV2 } from "aws-lambda";
+import {
+  APIGatewayEventRequestContextV2,
+  APIGatewayProxyHandlerV2,
+} from "aws-lambda";
 import { ZodError } from "zod";
 import { listProductsSchema } from "../schemas/product-schemas";
 import { listProducts } from "../services/product-service";
@@ -26,10 +29,14 @@ export const list: APIGatewayProxyHandlerV2 = async (event) => {
     if (!authorizerContext || !authorizerContext?.userId) {
       throw new Error("Unauthorized");
     }
-    console.log(`Usuário ${authorizerContext?.email} (Role: ${authorizerContext?.role}) está acessando /products.`);
+    console.log(
+      `Usuário ${authorizerContext?.email} (Role: ${authorizerContext?.role}) está acessando /products.`
+    );
 
     await consumeToken(authorizerContext.userId);
-    const { limit, cursor } = listProductsSchema.parse(event.queryStringParameters ?? {});
+    const { limit, cursor } = listProductsSchema.parse(
+      event.queryStringParameters ?? {}
+    );
 
     const result = await listProducts(limit, cursor);
 
@@ -50,7 +57,10 @@ export const list: APIGatewayProxyHandlerV2 = async (event) => {
         statusCode: 400, // Bad Request
         body: JSON.stringify({
           message: "Erro nos parâmetros da query.",
-          errors: error.issues.map((i) => ({ message: i.message, path: i.path })),
+          errors: error.issues.map((i) => ({
+            message: i.message,
+            path: i.path,
+          })),
         }),
       };
     }

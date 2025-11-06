@@ -65,7 +65,10 @@ export async function consumeToken(userId: string): Promise<void> {
   const elapsed = now - bucket.lastRefill;
   const tokensToRefill = elapsed * REFILL_RATE_PER_SECOND;
 
-  const currentTokens = Math.min(bucket.tokens + tokensToRefill, BUCKET_CAPACITY);
+  const currentTokens = Math.min(
+    bucket.tokens + tokensToRefill,
+    BUCKET_CAPACITY
+  );
 
   if (currentTokens < 1) {
     // Não tem tokens, bloqueia!

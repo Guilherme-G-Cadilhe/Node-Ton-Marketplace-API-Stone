@@ -1,5 +1,5 @@
 import * as ProductRepository from "../repositories/product-repository";
-import { StoredProduct } from "../models/product";
+import { DynamoCursor, StoredProduct } from "../models/product";
 
 interface PaginatedProductResponse {
   data: StoredProduct[];
@@ -13,24 +13,30 @@ interface PaginatedProductResponse {
 /**
  * Codifica um objeto (LastEvaluatedKey) em uma string Base64 opaca
  */
-function encodeCursor(cursorObj: Record<string, any>): string {
+function encodeCursor(cursorObj: DynamoCursor): string {
   return Buffer.from(JSON.stringify(cursorObj)).toString("base64");
 }
 
 /**
  * Decodifica o cursor Base64 de volta para um objeto
  */
-function decodeCursor(cursorStr: string): Record<string, any> {
+function decodeCursor(cursorStr: string): DynamoCursor {
   return JSON.parse(Buffer.from(cursorStr, "base64").toString("ascii"));
 }
 
 /**
  * Lógica de negócio para listar produtos
  */
-export async function listProducts(limit: number, cursor?: string): Promise<PaginatedProductResponse> {
+export async function listProducts(
+  limit: number,
+  cursor?: string
+): Promise<PaginatedProductResponse> {
   const exclusiveStartKey = cursor ? decodeCursor(cursor) : undefined;
 
-  const { items, lastEvaluatedKey } = await ProductRepository.getProducts(limit, exclusiveStartKey);
+  const { items, lastEvaluatedKey } = await ProductRepository.getProducts(
+    limit,
+    exclusiveStartKey
+  );
 
   const hasNext = !!lastEvaluatedKey;
   const nextCursor = lastEvaluatedKey ? encodeCursor(lastEvaluatedKey) : null;

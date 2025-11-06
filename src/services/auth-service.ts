@@ -19,7 +19,10 @@ export async function loginUser(email: string, passwordInput: string) {
     throw new AuthError("Email ou senha inválidos.");
   }
 
-  const isPasswordValid = await bcrypt.compare(passwordInput, user.passwordHash);
+  const isPasswordValid = await bcrypt.compare(
+    passwordInput,
+    user.passwordHash
+  );
   if (!isPasswordValid) {
     throw new AuthError("Email ou senha inválidos.");
   }

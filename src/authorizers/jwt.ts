@@ -11,8 +11,11 @@ interface JwtPayload {
  * Este é o nosso "porteiro" (Custom Authorizer).
  * Valida o token JWT enviado no header Authorization.
  */
-export const handler: APIGatewayRequestSimpleAuthorizerHandlerV2 = async (event) => {
-  const authHeader = event.headers?.authorization ?? event.headers?.Authorization;
+export const handler: APIGatewayRequestSimpleAuthorizerHandlerV2 = async (
+  event
+) => {
+  const authHeader =
+    event.headers?.authorization ?? event.headers?.Authorization;
   const token = authHeader?.replace("Bearer ", "");
   const secret = process.env.JWT_SECRET;
 
