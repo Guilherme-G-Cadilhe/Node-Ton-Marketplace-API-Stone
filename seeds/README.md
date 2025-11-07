@@ -6,8 +6,8 @@ Scripts para popular automaticamente a tabela do DynamoDB Local com dados de tes
 
 ```
 /seeds
-├── seed-dynamodb.sh     # Script para Bash (Linux/Mac/WSL/VSCode Terminal)
-├── seed-dynamodb.ps1    # Script para PowerShell (Windows Terminal)
+├── bash-seed-dynamodb.sh     # Script para Bash (Linux/Mac/WSL/VSCode Terminal)
+├── windows-seed-dynamodb.ps1    # Script para PowerShell (Windows Terminal)
 └── README.md            # Este arquivo
 ```
 
@@ -22,7 +22,7 @@ Scripts para popular automaticamente a tabela do DynamoDB Local com dados de tes
    ```
 3. Execute o script:
    ```powershell
-   .\seeds\seed-dynamodb.ps1
+   .\seeds\windows-seed-dynamodb.ps1
    ```
 
 **Se der erro de política de execução:**
@@ -38,11 +38,11 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 1. Abra o **Terminal Bash** no VSCode ou seu terminal preferido
 2. Dê permissão de execução ao script (apenas na primeira vez):
    ```bash
-   chmod +x seeds/seed-dynamodb.sh
+   chmod +x seeds/bash-seed-dynamodb.sh
    ```
 3. Execute o script:
    ```bash
-   ./seeds/seed-dynamodb.sh
+   ./seeds/bash-seed-dynamodb.sh
    ```
 
 ---
@@ -72,7 +72,6 @@ Antes de executar os scripts, certifique-se de que:
    ```
 
    Use valores dummy para ambiente local:
-
    - Access Key: `fake`
    - Secret Key: `fake`
    - Region: `us-east-1`
@@ -160,7 +159,7 @@ Depois é só rodar o script novamente!
 
 ### Erro: "Permission denied" (Bash)
 
-- Dê permissão de execução: `chmod +x seeds/seed-dynamodb.sh`
+- Dê permissão de execução: `chmod +x seeds/bash-seed-dynamodb.sh`
 
 ### Erro de política de execução (PowerShell)
 
