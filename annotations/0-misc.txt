@@ -1,5 +1,5 @@
 Rodar serverless offline:
-> serverless offline
+> npx serverless offline
 
 Install dynamodb locally via docker: 
 > docker run -d --name dynamo \
@@ -22,6 +22,10 @@ Cria novo Profile com credenciais reais:
 
 Deploy AWS with real credentials
 > npx serverless deploy --stage dev --aws-profile seuProfile
+
+
+Ver logs em tempo real
+> npx serverless logs -f authLogin --stage dev --aws-profile ton-deploy --tail
 
 
 ====== DYNAMO LOCAL via CLI =====
@@ -94,3 +98,22 @@ $2b$10$dlWbsFIAo1nSwHhDatba7eCv6..7I1bXucHoEx9ZRbl.rtPZfEbqS
 ===== Open api =====
 Gerar:
 > npx serverless openapi generate -o openapi.json -f json
+
+
+
+
+==== AWS PRODUÇÃO URLS Ton ====
+endpoints:
+  GET - https://vwnbt8pifi.execute-api.us-east-1.amazonaws.com/health
+  POST - https://vwnbt8pifi.execute-api.us-east-1.amazonaws.com/auth/login
+  GET - https://vwnbt8pifi.execute-api.us-east-1.amazonaws.com/products
+
+
+Health Check
+curl https://vwnbt8pifi.execute-api.us-east-1.amazonaws.com/health
+
+
+==== Comandos AWS Prod ====
+Checar Tabela
+> aws dynamodb list-tables --profile seuPerfilAWS
+
