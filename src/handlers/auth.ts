@@ -3,6 +3,7 @@ import { ZodError } from "zod";
 import { loginSchema } from "../schemas/auth-schemas";
 import { loginUser } from "../services/auth-service";
 import { AuthError, TableNotFoundError } from "../models/errors";
+import { logger } from "../utils/logger";
 
 /**
  * Handler da Lambda para POST /auth/login
@@ -14,7 +15,6 @@ export const login: APIGatewayProxyHandlerV2 = async (event) => {
 
     const result = await loginUser(email, password);
 
-    // 3. Sucesso: Retorna 200 com o token
     return {
       statusCode: 200,
       headers: { "Content-Type": "application/json" },
@@ -22,6 +22,9 @@ export const login: APIGatewayProxyHandlerV2 = async (event) => {
     };
   } catch (error) {
     if (error instanceof TableNotFoundError) {
+      logger.error("Infraestrutura indisponível no login", error as Error, {
+        hint: error.message,
+      });
       return {
         statusCode: 503, // 503 Service Unavailable (boa prática para infra faltando)
         body: JSON.stringify({
@@ -32,6 +35,10 @@ export const login: APIGatewayProxyHandlerV2 = async (event) => {
     }
 
     if (error instanceof ZodError) {
+      logger.warn("Falha de validação no login", {
+        errors: error.issues.map((i) => i.message),
+        body: event.body,
+      });
       return {
         statusCode: 400, // Bad Request
         body: JSON.stringify({
@@ -45,13 +52,18 @@ export const login: APIGatewayProxyHandlerV2 = async (event) => {
     }
 
     if (error instanceof AuthError) {
+      logger.warn("Credenciais inválidas", {
+        email: JSON.parse(event.body ?? "{}")?.email,
+      });
       return {
         statusCode: 401, // Unauthorized
         body: JSON.stringify({ message: error.message }),
       };
     }
 
-    console.error("Erro inesperado no login:", error);
+    logger.error("Erro inesperado no login", error as Error, {
+      body: event.body,
+    });
     return {
       statusCode: 500,
       body: JSON.stringify({ message: "Erro interno do servidor." }),

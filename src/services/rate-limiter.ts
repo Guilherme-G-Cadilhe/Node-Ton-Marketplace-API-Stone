@@ -1,6 +1,7 @@
 import { GetCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { docClient } from "../config/dynamodb";
 import { RateLimitError } from "../models/errors";
+import { logger } from "../utils/logger";
 
 const TABLE_NAME = process.env.TABLE_NAME!;
 
@@ -66,6 +67,7 @@ export async function consumeToken(userId: string): Promise<void> {
 
   if (currentTokens < 1) {
     // Não tem tokens, bloqueia!
+    logger.warn("Usuário atingiu o Rate Limit", { userId });
     throw new RateLimitError("Too Many Requests");
   }
 

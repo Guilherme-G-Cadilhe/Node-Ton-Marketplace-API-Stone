@@ -7,6 +7,7 @@ import { listProductsSchema } from "../schemas/product-schemas";
 import { listProducts } from "../services/product-service";
 import { consumeToken } from "../services/rate-limiter";
 import { RateLimitError, TableNotFoundError } from "../models/errors";
+import { logger } from "../utils/logger";
 
 interface AuthorizerLambdaPayload {
   userId: string;
@@ -30,9 +31,12 @@ export const list: APIGatewayProxyHandlerV2 = async (event) => {
     if (!authorizerContext || !authorizerContext?.userId) {
       throw new Error("Unauthorized");
     }
-    console.log(
-      `Usuário ${authorizerContext?.email} (Role: ${authorizerContext?.role}) está acessando /products.`
-    );
+
+    logger.info("Usuário acessando produtos", {
+      userId: authorizerContext.userId,
+      email: authorizerContext?.email,
+      role: authorizerContext?.role,
+    });
 
     await consumeToken(authorizerContext.userId);
     const { limit, cursor } = listProductsSchema.parse(
@@ -48,6 +52,9 @@ export const list: APIGatewayProxyHandlerV2 = async (event) => {
     };
   } catch (error) {
     if (error instanceof TableNotFoundError) {
+      logger.error("Infraestrutura indisponível no list", error as Error, {
+        hint: error.message,
+      });
       return {
         statusCode: 503, // 503 Service Unavailable (boa prática para infra faltando)
         body: JSON.stringify({
@@ -58,12 +65,17 @@ export const list: APIGatewayProxyHandlerV2 = async (event) => {
     }
 
     if (error instanceof RateLimitError) {
+      logger.warn("Limite de requisições atingido", error as Error);
       return {
         statusCode: 429, // Too Many Requests
         body: JSON.stringify({ message: error.message }),
       };
     }
     if (error instanceof ZodError) {
+      logger.warn("Erro nos parâmetros da query", {
+        errors: error.issues.map((i) => i.message),
+        body: event.body,
+      });
       return {
         statusCode: 400, // Bad Request
         body: JSON.stringify({
@@ -76,7 +88,9 @@ export const list: APIGatewayProxyHandlerV2 = async (event) => {
       };
     }
 
-    console.error("Erro inesperado ao listar produtos:", error);
+    logger.error("Erro inesperado ao listar produtos", error as Error, {
+      body: event.body,
+    });
     return {
       statusCode: 500,
       body: JSON.stringify({ message: "Erro interno do servidor." }),
