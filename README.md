@@ -230,6 +230,47 @@ O Terraform neste projeto **não** quebra o deploy do Serverless, pois é demons
 
 ---
 
+---
+
+## ☁️ Deploy na AWS (Instruções para Avaliador)
+
+O projeto está 100% configurado para deploy na AWS. O `serverless.yml` na `main` está com as permissões IAM comentadas para garantir que o `serverless offline` funcione sem credenciais.
+
+Para fazer o deploy do projeto na sua própria conta AWS, siga os passos:
+
+1.  **Configurar Credenciais:** Garanta que você tenha um perfil AWS válido configurado no seu CLI. (ex: `aws configure --profile seu-perfil-de-deploy`)
+
+2.  **Editar `serverless.yml`:** Descomente o bloco `provider.iam` dentro do `serverless.yml`.
+
+    ```yaml
+    # DESCOMENTE AQUI
+    iam:
+      role:
+        statements:
+          - Effect: "Allow"
+            Action:
+              - "dynamodb:GetItem"
+              - "dynamodb:Query"
+              - "dynamodb:UpdateItem"
+            Resource:
+              - "arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/${self:custom.tableName}"
+    ```
+
+3.  **Executar o Deploy:**
+    Rode o comando de deploy apontando para seu perfil:
+
+    ```bash
+    npx serverless deploy --stage dev --aws-profile seu-perfil-de-deploy
+    ```
+
+4.  **Popular o Banco (Seed):**
+    Após o deploy, use o script de seed para a AWS (lembre-se de atualizar o nome do perfil no script, se necessário).
+    ```bash
+    ./seeds/aws-seed.sh
+    ```
+
+---
+
 ## 🚀 Testes e Qualidade
 
 O projeto é configurado para garantir a qualidade do código.

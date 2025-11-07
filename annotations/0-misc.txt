@@ -21,7 +21,10 @@ Cria novo Profile com credenciais reais:
 > aws configure --profile seuProfile
 
 Deploy AWS with real credentials
-> npx serverless deploy --stage dev --aws-profile seuProfile
+> npx serverless deploy --stage dev --aws-profile ton-deploy
+
+Deletar projeto da AWS
+> npx serverless remove --stage dev --aws-profile ton-deploy
 
 
 Ver logs em tempo real
@@ -115,5 +118,5 @@ curl https://vwnbt8pifi.execute-api.us-east-1.amazonaws.com/health
 
 ==== Comandos AWS Prod ====
 Checar Tabela
-> aws dynamodb list-tables --profile seuPerfilAWS
+> aws dynamodb list-tables --profile ton-deploy
 
