@@ -40,7 +40,7 @@ export const list: APIGatewayProxyHandlerV2 = async (event) => {
 
     await consumeToken(authorizerContext.userId);
     const { limit, cursor } = listProductsSchema.parse(
-      event.queryStringParameters ?? {},
+      event.queryStringParameters ?? {}
     );
 
     const result = await listProducts(limit, cursor);

@@ -62,7 +62,7 @@ export async function consumeToken(userId: string): Promise<void> {
 
   const currentTokens = Math.min(
     bucket.tokens + tokensToRefill,
-    BUCKET_CAPACITY,
+    BUCKET_CAPACITY
   );
 
   if (currentTokens < 1) {
