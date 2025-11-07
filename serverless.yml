@@ -9,7 +9,22 @@ provider:
   environment:
     TABLE_NAME: ${self:custom.tableName}
     JWT_SECRET: "DESAFIO_STONE"
-
+  iam:
+    role:
+      statements:
+        - Effect: "Allow"
+          Action:
+            # Permissão do authLogin (src/repositories/user-repository.ts)
+            - "dynamodb:GetItem"
+            # Permissões do getProducts (src/repositories/product-repository.ts)
+            - "dynamodb:Query"
+            # Permissões do Rate Limiter (src/services/rate-limiter.ts)
+            - "dynamodb:UpdateItem" # GetItem já está coberto acima
+          Resource:
+            # Permissão para a tabela principal
+            - "arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/${self:custom.tableName}"
+            # (No futuro, se você adicionar GSI para filtros, adicionaria o ARN do índice aqui)
+            # - "arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/${self:custom.tableName}/index/*"
   httpApi:
     authorizers:
       jwtAuthorizer:
@@ -20,7 +35,7 @@ provider:
         enableSimpleResponses: true # Retorna 401/403 simples
 
 plugins:
-  - serverless-plugin-typescript # Compila TS
+  - serverless-esbuild # Compila TS
   - serverless-offline # Roda a API localmente
   # ----------------------------------------------
   # DESABILITE O PLUGIN APENAS PARA O DEPLOY
@@ -31,16 +46,18 @@ plugins:
 package:
   individually: true # Otimiza o tamanho de cada Lambda
 
-  # Correção para o erro EMFILE durante AWS Deploy:
-  # excludeDevDependencies: true # Diz ao Serverless para NÃO incluir devDependencies no zip
-
 # Variáveis customizadas
 custom:
   tableName: ton-marketplace-api-${self:provider.stage} # ex: ton-marketplace-api-dev
-  typescript:
-    package:
-      # Cria um zip para cada função separadamente
-      individually: true
+  esbuild:
+    bundle: true
+    minify: false # Deixe false para debug mais fácil
+    sourcemap: true
+    exclude:
+      - "@aws-sdk/*" # Já existe no runtime do Lambda
+    target: "node20"
+    platform: "node"
+    concurrency: 10
 
   # documentation:
   #   version: "1.0.0"
