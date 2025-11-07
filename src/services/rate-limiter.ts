@@ -1,5 +1,6 @@
 import { GetCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { docClient } from "../config/dynamodb";
+import { RateLimitError } from "../models/errors";
 
 const TABLE_NAME = process.env.TABLE_NAME!;
 
@@ -10,13 +11,6 @@ const REFILL_RATE_PER_SECOND = 100 / 60; // ~1.67
 // VALORES DE TESTE (para forçar o erro 429)
 // const BUCKET_CAPACITY = 1; // Só 1 requisição
 // const REFILL_RATE_PER_SECOND = 1; // Recarrega 1 token por segundo
-
-export class RateLimitError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = "RateLimitError";
-  }
-}
 
 interface TokenBucket {
   PK: string;

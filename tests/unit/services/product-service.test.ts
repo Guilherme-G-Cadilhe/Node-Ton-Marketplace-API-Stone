@@ -60,7 +60,6 @@ describe("ProductService (listProducts)", () => {
     // Chamamos o serviço passando o cursor Base64 (segunda página)
     const result = await listProducts(10, mockCursorString);
 
-    // Assert
     expect(result.data).toEqual([mockProduct]);
     expect(result.pagination.hasNext).toBe(false); // Não há próxima página
     expect(result.pagination.nextCursor).toBe(null); // Cursor é nulo
@@ -71,7 +70,6 @@ describe("ProductService (listProducts)", () => {
     );
   });
 
-  // --- Teste 3: Estado Vazio ---
   it("deve retornar uma lista vazia se não houver produtos", async () => {
     mockedProductRepo.getProducts.mockResolvedValue({
       items: [],

@@ -1,7 +1,8 @@
-import { loginUser, AuthError } from "../../../src/services/auth-service";
+import { loginUser } from "../../../src/services/auth-service";
 import * as UserRepository from "../../../src/repositories/user-repository";
 import * as bcrypt from "bcryptjs";
 import * as jwt from "jsonwebtoken";
+import { AuthError } from "../../../src/models/errors";
 
 // 1. Simular (mockar) todos os módulos externos que o auth-service usa
 jest.mock("../../../src/repositories/user-repository");

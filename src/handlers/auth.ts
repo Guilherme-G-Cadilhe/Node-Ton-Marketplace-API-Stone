@@ -1,7 +1,8 @@
 import { APIGatewayProxyHandlerV2 } from "aws-lambda";
 import { ZodError } from "zod";
 import { loginSchema } from "../schemas/auth-schemas";
-import { AuthError, loginUser } from "../services/auth-service";
+import { loginUser } from "../services/auth-service";
+import { AuthError, TableNotFoundError } from "../models/errors";
 
 /**
  * Handler da Lambda para POST /auth/login
@@ -20,6 +21,16 @@ export const login: APIGatewayProxyHandlerV2 = async (event) => {
       body: JSON.stringify(result),
     };
   } catch (error) {
+    if (error instanceof TableNotFoundError) {
+      return {
+        statusCode: 503, // 503 Service Unavailable (boa prática para infra faltando)
+        body: JSON.stringify({
+          message: "Serviço temporariamente indisponível.",
+          hint: error.message,
+        }),
+      };
+    }
+
     if (error instanceof ZodError) {
       return {
         statusCode: 400, // Bad Request

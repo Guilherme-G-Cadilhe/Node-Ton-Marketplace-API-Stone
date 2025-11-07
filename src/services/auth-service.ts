@@ -1,14 +1,7 @@
 import * as bcrypt from "bcryptjs";
 import * as jwt from "jsonwebtoken";
 import * as UserRepository from "../repositories/user-repository";
-
-// Criamos um erro customizado para lidar com falhas de login
-export class AuthError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = "AuthError";
-  }
-}
+import { AuthError } from "../models/errors";
 
 /**
  * Lógica de negócio para login

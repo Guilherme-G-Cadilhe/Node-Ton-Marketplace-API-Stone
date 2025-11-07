@@ -5,7 +5,8 @@ import {
 import { ZodError } from "zod";
 import { listProductsSchema } from "../schemas/product-schemas";
 import { listProducts } from "../services/product-service";
-import { consumeToken, RateLimitError } from "../services/rate-limiter";
+import { consumeToken } from "../services/rate-limiter";
+import { RateLimitError, TableNotFoundError } from "../models/errors";
 
 interface AuthorizerLambdaPayload {
   userId: string;
@@ -46,6 +47,16 @@ export const list: APIGatewayProxyHandlerV2 = async (event) => {
       body: JSON.stringify(result),
     };
   } catch (error) {
+    if (error instanceof TableNotFoundError) {
+      return {
+        statusCode: 503, // 503 Service Unavailable (boa prática para infra faltando)
+        body: JSON.stringify({
+          message: "Serviço temporariamente indisponível.",
+          hint: error.message,
+        }),
+      };
+    }
+
     if (error instanceof RateLimitError) {
       return {
         statusCode: 429, // Too Many Requests

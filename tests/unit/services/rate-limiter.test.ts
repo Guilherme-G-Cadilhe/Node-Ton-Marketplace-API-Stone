@@ -1,10 +1,8 @@
 import { mockClient } from "aws-sdk-client-mock";
 import { docClient } from "../../../src/config/dynamodb";
 import { GetCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
-import {
-  consumeToken,
-  RateLimitError,
-} from "../../../src/services/rate-limiter";
+import { consumeToken } from "../../../src/services/rate-limiter";
+import { RateLimitError } from "../../../src/models/errors";
 
 const dynamoMock = mockClient(docClient);
 
