@@ -17,10 +17,10 @@ if (isOffline) {
       secretAccessKey: "FAKE",
     },
   });
-  console.log("CONECTADO AO DYNAMODB LOCAL (DOCKER)");
+  // console.log("CONECTADO AO DYNAMODB LOCAL (DOCKER)");
 } else {
   // Em produção (na AWS), ele usará as credenciais da Lambda automaticamente
-  console.log("CONECTADO AO DYNAMODB (AWS)");
+  // console.log("CONECTADO AO DYNAMODB (AWS)");
 }
 
 const client = new DynamoDBClient(clientConfig);
