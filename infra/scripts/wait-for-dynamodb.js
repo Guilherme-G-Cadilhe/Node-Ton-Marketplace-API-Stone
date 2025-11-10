@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 // infra/scripts/wait-for-dynamodb.js
-import { exec } from "node:child_process";
+const { exec } = require("node:child_process");
 
 // --- Configuração de Robustez ---
 const MAX_RETRIES = 30; // 30 tentativas
