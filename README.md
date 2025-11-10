@@ -1,3 +1,12 @@
+<p align="center">
+  <a href="https://github.com/Guilherme-G-Cadilhe/Node-Ton-Marketplace-API-Stone/actions/workflows/tests.yaml">
+    <img src="https://github.com/Guilherme-G-Cadilhe/Node-Ton-Marketplace-API-Stone/actions/workflows/tests.yaml/badge.svg" alt="Automated Tests Status" />
+  </a>
+  <a href="https://github.com/Guilherme-G-Cadilhe/Node-Ton-Marketplace-API-Stone/actions/workflows/linting.yaml">
+    <img src="https://github.com/Guilherme-G-Cadilhe/Node-Ton-Marketplace-API-Stone/actions/workflows/linting.yaml/badge.svg" alt="Automated Linting Status" />
+  </a>
+</p>
+
 # Desafio de Backend: Ton Marketplace API
 
 API robusta e escalável construída para o desafio da Stone/Ton, focada em performance, qualidade de código e alinhamento com a arquitetura Serverless-First da Stone.
