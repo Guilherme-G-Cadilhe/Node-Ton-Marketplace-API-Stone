@@ -10,17 +10,6 @@ jobs:
       AWS_ACCESS_KEY_ID: FAKE
       AWS_SECRET_ACCESS_KEY: FAKE
       AWS_DEFAULT_REGION: us-east-1
-    services:
-      dynamodb-local:
-        image: amazon/dynamodb-local:latest
-        ports:
-          - 8000:8000
-        # Adiciona um health check para esperar o container ficar pronto
-        options: >-
-          --health-cmd "curl http://localhost:8000/shell"
-          --health-interval 5s
-          --health-timeout 2s
-          --health-retries 5
     steps:
       - name: ⬇️ Checkout Repository para baixar o código do projeto
         uses: actions/checkout@v4
@@ -29,9 +18,15 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: "npm"
 
       - name: 📦 Install Dependencies com CI (Clean Install), instala exatamente o package-lock.json
         run: npm ci
+      - name: 📦 Install AWS CLI v2
+        run: |
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install --update
 
       - name: ⚙ Configure AWS CLI (Dummy Credentials)
         # O AWS CLI precisa de credenciais, mesmo para o localhost
@@ -52,4 +47,10 @@ jobs:
             --endpoint-url http://localhost:8000
 
       - name: 🧪 Run Tests (Unit + Integration)
-        run: npm test
+        # Este script agora orquestra TUDO:
+        # 1. Sobe o Docker
+        # 2. Espera o DynamoDB ficar pronto
+        # 3. Cria a tabela
+        # 4. Roda os testes
+        # 5. Derruba o Docker
+        run: npm test:ci
