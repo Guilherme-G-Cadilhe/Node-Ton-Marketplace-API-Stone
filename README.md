@@ -93,6 +93,7 @@ ton-marketplace-api/
 ├── docs/
 │   └── adrs/                 # Decisões de arquitetura (ADRs)
 ├── seeds/                    # Scripts para popular o banco
+├── infra/                    # Script para teste de integração no CI/CD
 ├── src/
 │   ├── authorizers/          # Lambdas de autorização (JWT)
 │   ├── config/               # Configuração de clientes (DynamoDB)
@@ -101,8 +102,10 @@ ton-marketplace-api/
 │   ├── repositories/         # Camada de acesso a dados (Data Access)
 │   ├── schemas/              # Validação de entrada (Zod)
 │   └── services/             # Lógica de negócio (Business Logic)
+├── terraform/                # Prova de Conceito do Terraform como IaC
 ├── tests/
 │   └── unit/                 # Testes unitários da camada de serviços
+│   └── integration/          # Testes de integração da camada de serviços
 ├── .gitignore
 ├── eslint.config.js          # Regras de lint
 ├── jest.config.js            # Configuração do Jest
