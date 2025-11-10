@@ -3,6 +3,7 @@ import { ResourceNotFoundException } from "@aws-sdk/client-dynamodb";
 import { docClient } from "../config/dynamodb";
 import { DynamoCursor, StoredProduct } from "../models/product";
 import { TableNotFoundError } from "../models/errors";
+import { logger } from "../utils/logger";
 
 const TABLE_NAME = process.env.TABLE_NAME!;
 
@@ -42,10 +43,12 @@ export async function getProducts(
     };
   } catch (error) {
     if (error instanceof ResourceNotFoundException) {
-      console.error(`Tabela ${TABLE_NAME} não encontrada.`);
+      logger.error(`Tabela ${TABLE_NAME} não encontrada.`, error as Error, {
+        hint: error.message,
+      });
       throw new TableNotFoundError(TABLE_NAME);
     }
-    console.error("Erro ao buscar produtos no DynamoDB:", error);
+    logger.error("Erro ao buscar produtos no DynamoDB:", error as Error);
     throw new Error("Erro no repositório de dados");
   }
 }

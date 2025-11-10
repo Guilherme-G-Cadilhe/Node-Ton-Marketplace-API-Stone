@@ -92,7 +92,6 @@ describe("ProductService (Integration)", () => {
     // Testamos a paginação com 2 itens por página
     const result = await listProducts(2, undefined);
 
-    // Verificamos os dados
     expect(result.data).toHaveLength(2);
     expect(result.data[0].name).toBe("Produto 1");
     expect(result.data[1].name).toBe("Produto 2");
@@ -103,18 +102,13 @@ describe("ProductService (Integration)", () => {
   });
 
   it("deve listar a segunda página (final) usando o cursor", async () => {
-    // 1. Pega a primeira página para obter o cursor
     const firstPage = await listProducts(2, undefined);
     const cursor = firstPage.pagination.nextCursor;
-
-    // 2. Pede a segunda página
     const secondPage = await listProducts(2, cursor!);
 
-    // Verificamos os dados
     expect(secondPage.data).toHaveLength(1);
     expect(secondPage.data[0].name).toBe("Produto 3");
 
-    // Verificamos a paginação (fim)
     expect(secondPage.pagination.hasNext).toBe(false);
     expect(secondPage.pagination.nextCursor).toBeNull();
   });

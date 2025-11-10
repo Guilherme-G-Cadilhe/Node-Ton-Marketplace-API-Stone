@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "serverless offline",
-    "test": "cross-env TABLE_NAME=ton-marketplace-api-dev IS_OFFLINE=true node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand",
+    "test": "cross-env TABLE_NAME=ton-marketplace-api-dev IS_OFFLINE=true JWT_SECRET=test-jest node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand",
     "services:up": "docker compose -f infra/compose.yaml up -d",
     "services:down": "docker compose -f infra/compose.yaml down",
     "services:wait": "node infra/scripts/wait-for-dynamodb.js",
