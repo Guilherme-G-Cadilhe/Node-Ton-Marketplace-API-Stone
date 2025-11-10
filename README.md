@@ -1,8 +1,8 @@
 # Desafio de Backend: Ton Marketplace API
 
-API robusta e escalável construída para o desafio de Software Engineer Pleno (SWE III) da Stone/Ton, focada em performance, qualidade de código e alinhamento com a arquitetura Serverless-First da Stone.
+API robusta e escalável construída para o desafio da Stone/Ton, focada em performance, qualidade de código e alinhamento com a arquitetura Serverless-First da Stone.
 
-O projeto implementa todos os requisitos obrigatórios e "Plus"
+O projeto implementa requisitos obrigatórios e "Plus"
 
 ## 🚀 Arquitetura da Solução (AWS Serverless)
 
@@ -71,6 +71,7 @@ A arquitetura é 100% Serverless, otimizada para performance, custo (Free Tier) 
 - [x] **Paginação (Cursor-Based):** Paginação performática no DynamoDB, retornando um cursor Base64 opaco.
 - [x] **Rate Limiting (Token Bucket):** Proteção de rota com 100 req/min por usuário, persistido no DynamoDB.
 - [x] **Testes de Unidade (100%):** Cobertura de 100% em toda a camada de _Serviços_ (auth, products, rate-limiter) usando Jest e Mocks.
+- [x] **Testes de Integração:** Suíte de testes (em `tests/integration`) que valida a lógica de paginação e as queries do DynamoDB contra um banco de dados real (Docker), garantindo a integração correta do repositório.
 - [x] **Qualidade de Código:** Configurado com ESLint, Prettier e Commits Semânticos (commitzen).
 - [x] **Documentação de API:** Arquivo `openapi.json` gerado automaticamente (veja como rodar abaixo).
 - [x] **Documentação de Arquitetura (ADRs):** Decisões de design documentadas em `docs/adrs/`.
