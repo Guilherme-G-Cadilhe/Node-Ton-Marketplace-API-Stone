@@ -321,13 +321,13 @@ Este desafio foi uma imersão que me permitiu não só aprender, mas reforçar c
     - Aprendi que Lambdas são focadas em _eventos_ e _funções_, não em _servidores_. Que exigem uma arquitetura diferente, onde o estado é gerenciado externamente (ex: DynamoDB).
 
 2.  **Reforço em TypeScript e Testes:**
-    - Embora eu já usasse TypeScript e Testes, este projeto foi uma oportunidade de reforço para aplicar tipos de forma mais estrita, criar schemas de validação robustos com Zod e estruturar melhor mocks e testes unitários com 100% de cobertura nos serviços, usando mocks do aws-sdk-client-mock.
+    - Embora eu já usasse TypeScript e Testes, este projeto foi uma oportunidade de reforço para aplicar tipos de forma mais estrita, criar schemas de validação com Zod e estruturar melhor mocks e testes unitáriose de integração (Com Orquestrador) com 100% de cobertura nos serviços, usando mocks do aws-sdk-client-mock.
 
 3.  **Modelagem NoSQL (DynamoDB Single-Table Design):**
-    - A maior mudança de paradigma foi sair da modelagem relacional ou de documentos do MongoDB para o Single-Table Design do DynamoDB.
-    - Aprendi a focar em "Padrões de Acesso" antes de escrever qualquer código. Usar chaves compostas (PK/SK) como `USER#email` e `PRODUCTS` foi uma virada de chave para permitir buscas diretas (Query) em vez de varrer a tabela inteira (Scan), o que entendi ser um anti-padrão de performance.
+    - O maior aprendizado de paradigma foi sair da modelagem relacional ou de documentos do MongoDB para o Single-Table Design do DynamoDB.
+    - Aprendi a focar em "Padrões de Acesso". Usar chaves compostas (PK/SK) como `USER#email` e `PRODUCTS` foi utilizado para permitir buscas diretas (Query) em vez de varrer a tabela inteira (Scan), o que entendi ser um anti-padrão de performance.
 
 4.  **IAM e CloudWatch:**
     - O ponto de inflexão do projeto foi o deploy. Localmente, tudo funcionava, mas na AWS recebi um `500 Internal Server Error`.
-    - O aprendizado real foi mergulhar no CloudWatch e encontrar o log da `AccessDeniedException`. Ali entendi a diferença crucial entre as credenciais do meu usuário (que o CLI usa) e a Role de Execução (que a Lambda assume na nuvem).
+    - Um dos aprendizados foi mergulhar no CloudWatch e encontrar o log da `AccessDeniedException`. Ali entendi a diferença crucial entre as credenciais do meu usuário (que o CLI usa) e a Role de Execução (que a Lambda assume na nuvem).
     - Resolver isso diretamente no `serverless.yml` conectou os pontos de como a Infraestrutura como Código (IaC) gerencia permissões de forma declarativa.
