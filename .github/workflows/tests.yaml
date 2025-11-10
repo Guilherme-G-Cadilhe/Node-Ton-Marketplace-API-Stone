@@ -17,7 +17,7 @@ jobs:
           - 8000:8000
         # Adiciona um health check para esperar o container ficar pronto
         options: >-
-          --health-cmd "curl http://localhost:8000"
+          --health-cmd "curl http://localhost:8000/shell"
           --health-interval 5s
           --health-timeout 2s
           --health-retries 5
