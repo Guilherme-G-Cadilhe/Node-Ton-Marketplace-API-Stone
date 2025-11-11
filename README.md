@@ -350,6 +350,6 @@ Dado que este foi meu primeiro contato profundo com o ecossistema Serverless da 
 
 1.  **Melhoria na Busca (Feature Futura):** Para uma busca por *nome* de produto, eu aprendi que usar o DynamoDB direto (com `Scan`) não é o ideal. Meu próximo passo seria pesquisar qual é a solução padrão da AWS para buscas. Eu sei que envolve conectar os "Streams" do DynamoDB a um serviço de busca separado, como o OpenSearch, mas eu precisaria de mais tempo para estudar e implementar essa integração corretamente.
 2.  **Otimização do Rate Limit:** Meu Rate Limit usa o DynamoDB para persistir os tokens. Para altíssima performance, eu pesquisaria como mover essa lógica para um serviço de cache em memória, como o Redis (que na AWS se chama ElastiCache).
-3.  **Novas Rotas e CRUD:** Criaria as rotas e fluxos para Criação, Atualização, Validação e Verificação de Usuário. E também novos fluxos para os Produtos.
+3.  **Novas Rotas e CRUD:** Criaria as rotas e fluxos para Manipulação dos dados de Usuários. E também novos fluxos para os Produtos.
 4.  **Mais Testes e Validações:** Com os novos fluxos, adicionaria novos Cases de validações para diferentes situações, como validar e normalizar diferentes tipos de senhas e e-mails, padronizar e validar campos dos Produtos.
 5.  **Front-end:** Desenvolveria o Front-end do Projeto.
